@@ -61,20 +61,38 @@
 
 <script>
     const button = document.querySelector('.addRow');
-    const tbody = document.querySelector('#myTable tbody');
+    const tbody = document.querySelector('#tableL tbody');
     const select = document.querySelector('#id_service');
+    // const selectN = document.querySelector('#notes');
 
     const grandTotal = document.getElementById('grandTotal');
     const grandTotalInput = document.getElementById('grandTotalInput');
-    const orderPay = document.getElementById('order_pay');
-    const orderChange = document.getElementById('orderChange');
-    const orderChangeDisplay = document.getElementById('order_change_display');
-    const totalInput = document.getElementById('totalInput');
+    // const orderChange = document.getElementById('order_change');
+    // const orderChangeDisplay = document.getElementById('order_change_display');
+    // const orderPay = document.getElementById('order_pay');
+
+    const orderChange = document.getElementById('order_change');
+  const orderChangeDisplay = document.getElementById('order_change_display');
+  const orderPay = document.getElementById('order_pay');
+  const totalInput = document.getElementById('total');
+
+  function pay(){
+    //kembalian = bayar - total harga
+    const pay = parseFloat(orderPay.value) || 0;
+    const total = parseFloat(totalInput.value)||  0;
+
+
+    const change = pay-total;
+    orderChangeDisplay.value = change.toLocaleString('id-ID');
+    orderChange.value = change;
+   }
+   orderPay.addEventListener('input', pay);
 
     let no = 1;
     button.addEventListener("click", function() {
         const selectedservice = select.options[select.selectedIndex];
         const serviceValue = selectedservice.value;
+        // const noteValue = selectN.value;
 
         if (!serviceValue) {
             alert("Please select a service first!!");
@@ -88,10 +106,11 @@
         <td>${no}</td>
         <td><input type='hidden' name='id_service[]' value='${serviceValue}'  class='id_services'>${serviceName}</td>
         <td>
-        <input type='number' value='1' step='any' min='0' name='td_qty[]' class='qtys'>
+        <input type='number' value='1' step='any' min='0' name='qty[]' class='qtys'>
         <input type='hidden' class='priceInput' value='${servicePrice}' name='price[]'>
         </td>
-        <td><input type='hidden'  class='totals' name='td_total[]' value='${servicePrice}'><span class='totalText'>${servicePrice}</span></td>
+        <td><input type='hidden'  class='totals' name='subtotal[]' value='${servicePrice}'><span class='totalText'>${servicePrice}</span></td>
+
         <td><button class='btn btn-success btn-sm removeRow'>Delete</button></td>
         `;
 
@@ -141,52 +160,69 @@
         grandTotal.textContent = grand.toLocaleString('id-ID');
         grandTotalInput.value = grand;
 
-        // Update change display
-        // const paymentInput = document.getElementById('order_pay');
-        // const changeDisplay = document.getElementById('changeDisplay');
-        // const paymentAmount = parseFloat(paymentInput.value) || 0;
-        // const change = paymentAmount - grand;
 
-        // changeDisplay.textContent = change >= 0 ? change.toLocaleString('id-ID') : '0';
     }
 
 
-    function updateOrderChange() {
-        const pay = perseInt(orderPay.value) || 0;
-        const total = parseInt(totalInput.value) || 0;
-        const change = pay - total;
+    paymentInput.addEventListener('input', function() {
+        const paymentAmount = parseFloat(paymentInput.value) || 0;
+        const totalAmount = parseFloat(grandTotalInput.value) || 0;
+        const change = paymentAmount - totalAmount;
 
-        orderChangeDisplay.value =  change.toLocaleString('id-ID');
-        orderChange.value = change
-    }
-    orderPay.addEventListener('input', updateOrderChange);
-
-    // const paymentInput = document.getElementById('order_pay');
-    // const changeDisplay = document.getElementById('changeDisplay');
-
-    // paymentInput.addEventListener('input', function() {
-    //     const paymentAmount = parseFloat(paymentInput.value) || 0;
-    //     const totalAmount = parseFloat(grandTotalInput.value) || 0;
-    //     const change = paymentAmount - totalAmount;
-
-    //     changeDisplay.textContent = change >= 0 ? change.toLocaleString('id-ID') : '0';
-    // });
-</script>
-
-<script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"data-client-key="{{ env("MIDTRANS_CLIENT-KEY") }}"></script>
-<script>
-    snap.pay('{{ $snapToken }}', {
-        onSuccess: function(result) {
-            // window.location.href = "/midtrans/finish?order_id={{ $order_id }}";
-        },
-        onPending: function(result) {
-            alert("Silakan selesaikan pembayaran.");
-        },
-        onError: function(result) {
-            alert("Pembayaran gagal.");
-        }
+        changeDisplay.textContent = change >= 0 ? change.toLocaleString('id-ID') : '0';
     });
 </script>
+
+<script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env("MIDTRANS_CLIENT_KEY") }}"></script>
+<script>
+
+  document.getElementById('paymentForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const form = e.target;
+    const method = form.querySelector('[name="payment_method"]:checked, [name="payment_method"]:focus') ?.value;
+
+    const data ={
+      order_pay: document.getElementById('order_pay').value,
+      order_change: document.getElementById('order_change').value,
+      payment_method: method,
+      _token: '{{ csrf_token() }}'
+    };
+    const orderId = form.dataset.orderId;
+
+    if (method === 'cash') {
+      form.submit();
+    }else{
+      fetch(`/trans/${orderId}/snap`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': data._token
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if(res.token){
+          snap.pay(res.token, {
+            onSuccess: function(result){
+              window.location.href = `trans`;
+            },
+            onPending: function(result){
+              alert('Silahkan selesaikan pembayaran anda.');
+            },
+            onError: function(result){
+              alert('Gagal');
+            }
+          });
+        }else{
+          alert("Gagal mengambil token pembayaran");
+        }
+      });
+    }
+  });
+</script>
+
 
 </body>
 

@@ -83,21 +83,6 @@ class TransOrderController extends Controller
         $title = "Detail trans";
         $details = TransOrders::with('customer', 'details.service')->where('id', $id)->get()->first();
 
-        $params = [
-            'transaction_details' => [
-                'order_id' => rand(),
-                'gross_amount' => $request->amount,
-            ],
-            'customer_details' => [
-                'first_name' => "bambang",
-                'last_name' => "suryono",
-                'email' => "bambang@gmail.com",
-                'phone' => "08123456789",
-            ],
-            'enabled_payments' => ['qris'],
-        ];
-        $snapToken = Snap::getSnapToken($params);
-
         return view('trans.show', compact('title', 'details'));
     }
 
@@ -122,7 +107,7 @@ class TransOrderController extends Controller
      */
     public function destroy(string $id)
     {
-         $delete = TransOrders::find($id);
+        $delete = TransOrders::find($id);
         $delete->delete();
         return redirect()->to('trans')->with('success', 'Data level berhasil dihapus');
     }
@@ -133,5 +118,27 @@ class TransOrderController extends Controller
         // return $details; //Debugging, hanya data saja
         // dd($details); //Debugging, semua object yg ada datanya
         return view('trans.print', compact('details'));
+    }
+
+
+
+    public function snap(Request $request, $id)
+    {
+        $order = TransOrders::with(['details', 'customer'])->findOrFail(($id));
+        // dd($order);
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => rand(),
+                'gross_amount' => $order->total,
+            ],
+            'customer_details' => [
+                'first_name' => $order->customer->name ?? 'umum',
+                'email' => $order->customer->email ?? 'dummy@gmail.com',
+
+            ],
+        ];
+        $snap = Snap::createTransaction($params);
+        return response()->json(['token' => $snap->token]);
     }
 }

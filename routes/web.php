@@ -29,6 +29,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('trans', TransOrderController::class);
     Route::get('print_struk/{id}', [App\Http\Controllers\TransOrderController::class, 'printStruk'])->name('print_struk');
 
+    Route::post('trans/{id}/snap', [App\Http\Controllers\TransOrderController::class, 'snap'])->name('trans.snap');
+
+
+
 
     // Route::get('insert/service', [DashboardController::class, 'showInsService']);
 });
