@@ -10,11 +10,11 @@
                 <form action="{{ route('user.store',) }}" method="POST" >
                     @csrf
                     <label for="">Nama</label>
-                    <input type="text" class="form-control" name="service_name" required>
+                    <input type="text" class="form-control" name="name" required>
                     <label for="">Email</label>
                     <input type="email" class="form-control" name="email" required>
                     <label for="">Password</label>
-                    <input name="password" id="" cols="30" rows="5" class="form-control" placeholder="masukkan notes..."></input>
+                    <input name="password" id="" cols="30" rows="5" class="form-control" placeholder="masukkan pass..."></input>
 
                     <button type="submit" class="btn btn-primary mt-2">Create</button>
                 </form>

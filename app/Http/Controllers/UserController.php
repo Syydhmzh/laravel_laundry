@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Monolog\Level;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
 {
@@ -37,6 +38,8 @@ class UserController extends Controller
     {
 
         User::create($request->all());
+        toast('data berhasil ditambah','success');
+
         return redirect()->to('user')->with('success', 'Data level berhasil ditambahkan');
     }
 
@@ -64,9 +67,11 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::find($id);
-        $user->user_name = $request->user_name;
-        $user->price = $request->price;
-        $user->description = $request->description;
+        $user->name = $request->name;
+        $user->email= $request->email;
+        if ($request->password){
+        $user->password = $request->password;
+        }
         $user->save();
         return redirect()->to('user')->with('success', 'Data level berhasil diubah');
     }

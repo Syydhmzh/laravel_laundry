@@ -11,15 +11,15 @@
                     @method('PUT')
                     <div class="mb-3">
                         <label for="">Nama User</label>
-                        <input type="text" value="{{ $user->name }}"  placeholder="Masukkan Nama user" name="user_name" class="form-control" required>
+                        <input type="text" value="{{ $user->name }}"  placeholder="Masukkan Nama user" name="name" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label for="">Email</label>
-                        <input type="email" value="{{ $user->email }}"  placeholder="Masukkan email anda" name="price" class="form-control" required>
+                        <input type="email" value="{{ $user->email }}"  placeholder="Masukkan email anda" name="email" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label for="">Password</label>
-                        <input type="password" value="{{ $user->email }}"  placeholder="Masukkan email anda" name="price" class="form-control" required>
+                        <input type="password" value="{{ $user->email }}"  placeholder="Masukkan email anda" name="password" class="form-control" required>
                     </div>
 
                     <div class="mb-3">

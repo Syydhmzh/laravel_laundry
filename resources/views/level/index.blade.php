@@ -12,9 +12,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama service</th>
-                            <th>Harga</th>
-                            <th>Deskripsi</th>
+                            <th>Nama Level</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -22,9 +20,7 @@
                         @foreach ($datas as $key => $data )
                         <tr>
                             <td>{{ $key += 1}} </td>
-                            <td>{{ $data->service_name }}</td>
-                            <td>{{ number_format($data->price) }}</td>
-                            <td>{{ $data->description }}</td>
+                            <td>{{ $data->name }}</td>
                             <td>
                                 <a href="{{ route('level.edit', $data->id) }}" class="btn btn-primary btn-sm">Edit</a>
                                 <form action="{{ route('level.destroy', $data->id) }}" method="POST" class="d-inline">

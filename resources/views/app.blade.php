@@ -38,6 +38,8 @@
 
 
   </main><!-- End #main -->
+  @include('sweetalert::alert')
+
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
@@ -58,6 +60,8 @@
   <!-- Vendor JS Files -->
 
 @include('inc.js')
+@include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
+
 
 <script>
     const button = document.querySelector('.addRow');

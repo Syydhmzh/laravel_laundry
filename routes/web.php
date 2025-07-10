@@ -28,25 +28,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('trans', TransOrderController::class);
     Route::get('print_struk/{id}', [App\Http\Controllers\TransOrderController::class, 'printStruk'])->name('print_struk');
-
     Route::post('trans/{id}/snap', [App\Http\Controllers\TransOrderController::class, 'snap'])->name('trans.snap');
-
-
-
-
     // Route::get('insert/service', [DashboardController::class, 'showInsService']);
 });
 
-
-
-
-
-
-
-
 Route::get('belajar', [BelajarController::class, 'index']);
 Route::get('tambah', [BelajarController::class, 'tambah'])->name('tambah');
-
 // Get Table Counts
 Route::get('data/hitungan', [BelajarController::class, 'viewHitungan'])->name('data.hitungan');
 Route::get('edit/data-hitung/{id}', [BelajarController::class, 'editDataHitung'])->name('edit.data-hitung');
@@ -55,8 +42,6 @@ Route::post('tambah-action', [BelajarController::class, 'tambahAction'])->name('
 // post : tambah dan ubah data (form)
 // put : ubah data(form)
 //delete : hapus data(form)
-
 //Put Table counts
 Route::put('users/{id}', [BelajarController::class, 'updateTambahan'])->name('update.tambahan');
-
 Route::delete('softDelete/data-hitung/{id}', [BelajarController::class, 'softDeleteTambahan'])->name('softDelete.data-hitung');

@@ -21,17 +21,16 @@
                                 </tr>
                             </th>
                             @foreach ($datas as $key => $data)
-
                             <tr>
                                 <td>{{ $key += 1 }}</td>
                                 <td>{{ $data->name }}</td>
                                 <td>{{ $data->email }}</td>
                                 <td>
                                     <a href="{{ route('user.edit', $data->id) }}" class="btn btn-success">Edit</a>
-                                    <form action="" method="POST" style="display: inline;">
+                                    <form action="{{ route('user.destroy', $data->id) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <a href="" class="btn btn-danger m-2" type="submit" onclick="return confirm('yakin mau hapus?')">Delete </a>
+                                        <button href="" class="btn btn-danger m-2" type="submit" onclick="return confirm('yakin mau hapus?')">Delete </button>
                                     </form>
                                 </td>
                             </tr>

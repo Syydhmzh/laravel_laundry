@@ -15,10 +15,14 @@ Route::get('/', function(){
     return response()->json($response);
 });
 
-Route::get('user', [App\http\Controllers\API\ApiController::class, 'getUsers']);
-Route::put('user/{id}', [App\http\Controllers\API\ApiController::class, 'editUser']);
+// harus login dulu buat dapet token
+Route::middleware(['auth:sanctum'])->group(function (){
+    Route::get('user', [App\http\Controllers\API\ApiController::class, 'getUsers']);
+    Route::get('me', [App\http\Controllers\API\ApiController::class, 'me']);
+});
+Route::get('user/{id}', [App\http\Controllers\API\ApiController::class, 'editUser']);
 Route::post('user', [App\http\Controllers\API\ApiController::class, 'storeUser']);
-
 Route::put('user/{id}', [App\http\Controllers\API\ApiController::class, 'updateUser']);
-
+Route::delete('user/{id}', [App\http\Controllers\API\ApiController::class, 'deleteUser']);
+Route::post('login', [App\http\Controllers\API\ApiController::class, 'loginAction']);
 
